@@ -1,4 +1,6 @@
+const { response } = require('express');
 const express = require('express');
+const faker = require('faker');
 const app = express(); // create the app
 const port = 3000; // port that it'll be running on
 
@@ -10,20 +12,31 @@ const port = 3000; // port that it'll be running on
   res.send('new end-point');
 });*/
 
-app.get('/Products', (req, res) => {
-  res.json([
-    {
-      name: 'Product 1',
-      price: 1000,
-    },
-    {
-      name: 'Product 2',
-      price: 2000,
-    },
-  ]);
+app.get('/products', (req, res) => {
+  const products = [];
+  const { size } = req.query;
+  const limit = size || 10;
+  //example limit
+
+  // /products?size=n
+
+  for (let i = 0; i < limit; i++) {
+    products.push({
+      name: faker.commerce.productName(),
+      price: parseInt(faker.commerce.price()),
+      image: faker.image.imageUrl(),
+    });
+  }
+  res.json(products);
 });
 
-app.get('/Products/:id', (req, res) => {
+//specific endpoints should go ahead of dinamics
+//specific
+app.get('/products/filter', (req, res) => {
+  res.send('Im the filter');
+});
+//dinamic
+app.get('/products/:id', (req, res) => {
   const { id } = req.params;
   res.json({
     id,
@@ -42,4 +55,18 @@ app.get('/categories/:categoryId/products/:productId', (req, res) => {
 
 app.listen(port, () => {
   console.log('my port: ' + port);
+});
+
+//query parameters
+
+app.get('/users', (req, res) => {
+  const { limit, offset } = req.query;
+  if (limit && offset) {
+    response.json({
+      limit,
+      offset,
+    });
+  } else {
+    res.send('There is no parameters');
+  }
 });
