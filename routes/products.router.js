@@ -33,6 +33,7 @@ router.get('/:id', (req, res) => {
     id,
     name: 'Product 1',
     price: 1000,
+    date: 'Mar 12 2012 10:00:00 AM',
   });
 });
 
